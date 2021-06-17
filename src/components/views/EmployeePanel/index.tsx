@@ -1,0 +1,1 @@
+export { EmployeePanelView } from "./EmployeePanel.view";
