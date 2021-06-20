@@ -38,4 +38,8 @@ export const InputGeneral = styled.input`
   padding: 0.4rem 0.5rem;
   box-sizing: border-box;
   color: ${colors.auxilary};
+
+  :disabled{
+    cursor: not-allowed;
+  }
 `

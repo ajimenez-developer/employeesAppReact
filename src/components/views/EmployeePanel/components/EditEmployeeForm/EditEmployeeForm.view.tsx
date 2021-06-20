@@ -38,7 +38,7 @@ export class EditEmployeeFormView extends React.Component<Props & FormikProps<an
           <Form>
             <Label htmlFor="name">
             {sentence.name}
-              <Input name="name" type="text" placeholder={sentence.name} 
+              <Input name="name" type="text" autoComplete="off" placeholder={sentence.name} 
                 valid={this.props.touched?.name && !this.props.errors?.name ? 'true' : 'false'}
                 error={this.props.touched?.name && this.props.errors?.name}/>
             </Label>

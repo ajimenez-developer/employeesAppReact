@@ -41,7 +41,7 @@ export class EmployeesTableView extends React.Component<Props> {
         </TableContainer>  
   )}
   
-  renderEmpty = ():any => {
+  renderEmpty = () => {
     return(
       <tr>
         <td colSpan={4} className="empty">Come on, add a new employee!</td>

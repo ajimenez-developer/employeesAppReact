@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { sentence } from '../../../const/texts';
 import { Label } from '../../../theme/form.styles';
 import { InputGeneral } from '../../../theme/general.styles';
@@ -10,7 +10,7 @@ import { StickerInfo } from '../../common/Sticker/Sticker.models';
 import { EditEmployeeFormRaw } from './components/EditEmployeeForm/EditEmployeeForm';
 import { EmployeesTable } from './components/EmployeesTable';
 import { NewEmployee, NewEmployeeState } from './components/NewEmployeeForm/NewEmployeeData.models';
-import { NewEmployeeFormView } from './components/NewEmployeeForm/NewEmployeeForm';
+import { NewEmployeeFormRaw } from './components/NewEmployeeForm/NewEmployeeForm';
 import { RemoveEmployeeFormView } from './components/RemoveEmployeeForm/RemoveEmployeeForm.view';
 import { ButtonsContainer, InputWrapper, MainWrapper, SearchContainer, LabelWrapper } from './EmployeePanel.styles';
 import { EmployeePositions, WorkOption } from './EmployeePositions.models'
@@ -72,7 +72,7 @@ export class EmployeePanelViewRaw extends React.Component<{}, State> {
             show
             onClose={this.isCloseModal}
             children={
-              <NewEmployeeFormView handleEmployeesList={this.handleEmployeesList} positions={employeePositions} onClose={this.isCloseModal}/>
+              <NewEmployeeFormRaw handleEmployeesList={this.handleEmployeesList} positions={employeePositions} onClose={this.isCloseModal}/>
             }
           />
         }
@@ -123,7 +123,7 @@ export class EmployeePanelViewRaw extends React.Component<{}, State> {
   )}
 
 
-  filter(event: any){
+  filter(event: ChangeEvent<HTMLInputElement>){
     var name = event.target.value
     const data = this.state.employeesList
     const newData = data.filter(function(item:any){
@@ -202,20 +202,26 @@ export class EmployeePanelViewRaw extends React.Component<{}, State> {
   private updateOrRemoveEmployee = (idEmployee: number, updatedEmployee?: NewEmployee) => {
     const { employeesList } = this.state
     let nameEmployeeDeleted: string = ""
+    let workPositionEmployeeUpdated: string = ""
 
     employeesList.forEach(employee => {
       if(employee.id === +idEmployee){
         employeesList.splice(employeesList.indexOf(employee), 1)
         nameEmployeeDeleted = employee.name
+        workPositionEmployeeUpdated = employee.workPosition
       }
     })
     
     if(updatedEmployee) {
       let employeeFormatted: NewEmployeeState = {
         id: updatedEmployee.id,
-        name: updatedEmployee.name,
+        name: updatedEmployee.name !== undefined || '' 
+              ? updatedEmployee.name 
+              : nameEmployeeDeleted,
         surname: updatedEmployee.surname,
-        workPosition: updatedEmployee.workPosition.label,
+        workPosition: updatedEmployee.workPosition.label !== undefined || ''
+                      ? updatedEmployee.workPosition.label 
+                      : workPositionEmployeeUpdated,
         dateOfBirth: updatedEmployee.dateOfBirth,   
       }
       employeesList.push(employeeFormatted)
@@ -228,7 +234,7 @@ export class EmployeePanelViewRaw extends React.Component<{}, State> {
       employeesList,
       infoEmployeesUpdate: true,
       infoSticker: {
-        name: nameEmployeeDeleted,
+        name: updatedEmployee ? employeesList[idEmployee-1].name : nameEmployeeDeleted,
         message: updatedEmployee ? sentence.msgUpdateEmployee : sentence.msgDeleteEmploye
       }
     })
@@ -246,7 +252,7 @@ export class EmployeePanelViewRaw extends React.Component<{}, State> {
       })
   }
 
-  mapperPositionsToOptions = (numberOfPositions: number, resApi: any) => {   
+  mapperPositionsToOptions = (numberOfPositions: number, resApi: EmployeePositions) => {   
     for (let i = 0; i < numberOfPositions; i++) {
       workPosition = {
         value: i,

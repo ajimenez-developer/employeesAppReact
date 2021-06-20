@@ -2,9 +2,9 @@ import { Formik } from "formik"
 import React from "react"
 import { FormContainer } from "../../../../../theme/form.styles";
 import { WorkOption } from "../../EmployeePositions.models"
-import NewEmployeeFormSegundoView from "./NewEmployeeFormSegundo.view"
 import * as Yup from "yup";
 import { sentence } from "../../../../../const/texts";
+import NewEmployeeFormView from "./NewEmployeeForm.view";
 
 
 interface State {
@@ -22,7 +22,7 @@ interface Props {
 
 let minimumDateOfHire: Date = new Date()
 
-export class NewEmployeeFormView extends React.Component<Props, State> {
+export class NewEmployeeFormRaw extends React.Component<Props, State> {
   state: State = {
     nameEmployee: '',
     surnameEmployee: '',
@@ -45,7 +45,10 @@ export class NewEmployeeFormView extends React.Component<Props, State> {
         <FormContainer>          
           <Formik
             initialValues={{ 
-
+              name: this.state.nameEmployee,
+              surname: this.state.surnameEmployee,
+              dateOfBirth: this.state.workPositionEmployee,
+              workPosition: this.state.dateOfBirthEmployee, 
             }}
             validationSchema={
               Yup.object().shape({
@@ -68,7 +71,7 @@ export class NewEmployeeFormView extends React.Component<Props, State> {
               })
             }
             render={(formikProps) => (
-              <NewEmployeeFormSegundoView
+              <NewEmployeeFormView
               {...formikProps}
               handleEmployeesList={this.props.handleEmployeesList} 
               positions={this.props.positions} 
@@ -91,4 +94,4 @@ export class NewEmployeeFormView extends React.Component<Props, State> {
   }
 }
 
-export const NewEmployeeForm = (NewEmployeeFormView)
+export const NewEmployeeForm = (NewEmployeeFormRaw)
